@@ -1,28 +1,34 @@
-import pyglet
-from pyglet.shapes import Circle
-# from pyglet.window import key
-# from pyglet.window import mouse
+import pygame
+import chunk
 
-window = pyglet.window.Window(
-        resizable=True,
-        fullscreen = False,
-        vsync = True,
-        style=pyglet.window.Window.WINDOW_STYLE_BORDERLESS
-        )
+pygame.init()
 
-circle = shapes.Circle(x=100, y=100, radius=50)
-
-@window.event
-def on_key_press(symbol, modifiers):
-    print(f'{chr(symbol)} key was pressed')
+screen = pygame.display.set_mode((3000, 2000))
+clock = pygame.time.Clock()
+running = True
 
 
-@window.event
-def on_mouse_press(x, y, button, modifiers):
-    # button -> renvoie le code du bouton de la souris
-    # x, y -> renvoie la postion de la souris lors du click
-    print(f'The {button} mouse button was pressed')
-    print(f'{x, y}')
+chunkSize = 16
+display = pygame.Surface((chunkSize*100, chunkSize*100))
+mapSize = len(chunk.chunk)
 
-pyglet.app.run()
+while running:
+    display.fill((0, 0, 0))
+   
 
+    for j, row in enumerate(chunk.chunk):
+        for i, tile in enumerate(row):
+            if tile :
+                pygame.draw.rect(display, (255, 255, 255), pygame.Rect(j*100, i*100, 100, 100), 1)
+
+        
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    screen.blit(display, (0, 0))
+    pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
