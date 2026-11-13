@@ -7,5 +7,5 @@ oct=6
 seed=100
 
 
-print(pnoise2(0.91, 0.4, octaves=oct, base=seed))
-help(noise)
+print(pnoise2(0.91, 4, octaves=oct, base=seed))
+#help(noise)

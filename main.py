@@ -1,36 +1,32 @@
 import pygame
 import chunk
+from Chunk import Chunk 
 
 pygame.init()
 
+width, height = 2460, 1440
 
-zoom = 4
+zoom = 5
 
-screen = pygame.display.set_mode((1920, 1080))
+border = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 
 running = True
-
-display = pygame.Surface((1920 // zoom, 1080 // zoom))
-
 characterImage = pygame.image.load("./Ressources/Outline/MiniCavalierMan.png").convert()
-characterImage.set_colorkey((255, 255, 255))
-
-tileImage = pygame.image.load("tile.png").convert_alpha()
-#tileImage.set_colorkey((0, 0, 0))
+characterImage.set_colorkey((0, 0, 0))
 
 x,y = 0, 0
 
 velocity = 20
 
+c = Chunk(1, border)
 while running:   
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        if event.type == pygame.MOUSEWHEEL:
-            zoom = max(1, min(6, zoom + event.y))
-            display = pygame.Surface((1920 // zoom, 1080 // zoom))
-    
+        if event.type == pygame.KEYDOWN:
+            print(x,y)
+
     keys = pygame.key.get_pressed()
 
     if keys[pygame.K_q]:
@@ -46,18 +42,13 @@ while running:
         y += 8 / velocity
         x -= 16 / velocity
 
-    display.fill((0, 0, 0))
+    border.fill((255, 255, 255))
+    
+    chunk = c.chunk_render()
+    c.chunk_draw(chunk, width / 2 + x, height / 2 + y, scale = 5)
 
-    for j, row in enumerate(chunk.chunk):
-        for i, tile in enumerate(row):
-            if tile :
-                display.blit(tileImage, (1920 // 8 + i * 16 - j * 16 - x, 1080 // 8 + i * 8 + j * 8 - y))
-
-    display.blit(characterImage, (1920 // 8, 1080 // 8))
-    pygame.transform.scale(display, screen.get_size(), screen)
+    border.blit(pygame.transform.scale(characterImage, (64, 64)), (width // 2, height // 2))
     pygame.display.flip()
-    pygame.display.update()
-
     clock.tick(120)
 
 pygame.quit()
